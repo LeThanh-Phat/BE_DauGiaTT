@@ -143,7 +143,7 @@ app.post('/api/capture-order/:orderID', async (req, res) => {
       };
 
       // Sử dụng biến môi trường cho URL
-      const apiUrl = process.env.API_URL || 'http://localhost:3005';
+      const apiUrl = process.env.API_URL;
       axios.post(`${apiUrl}/api/dkphien/taodkphien`, dangKyData)
         .then((response) => {
           console.log('Đăng ký phiên thành công:', response.data);
@@ -174,7 +174,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Có lỗi xảy ra!', error: err.message });
 });
 
-// 🚀 Khởi động server
 server.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });
