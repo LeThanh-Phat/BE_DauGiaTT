@@ -8,7 +8,34 @@ const xemchitietphiendaugia = (req, res) => {
     }
 
     try {
-        const sqlPDG = "SELECT ANY_VALUE(pdg.idphiendg) AS idphiendg,ANY_VALUE(pdg.trangthai) AS trangthaipdg,ANY_VALUE(t.gmail) AS gmail_tk,sp.*,GROUP_CONCAT(h.tenhinhanh) AS ds_hinhanh FROM phiendaugia pdg JOIN sanpham sp ON pdg.idsp = sp.idsp  JOIN hinhanh h ON h.idsp = sp.idsp JOIN taikhoan t ON sp.idtk = t.idtk GROUP BY sp.idsp";
+        const sqlPDG = `SELECT 
+                ANY_VALUE(pdg.idphiendg) AS idphiendg,
+                ANY_VALUE(pdg.idsp) AS idsp,
+                ANY_VALUE(pdg.idtkad) AS idtkad,
+                ANY_VALUE(pdg.trangthai) AS trangthaipdg,
+                ANY_VALUE(pdg.ketquaphien) AS ketquaphien,
+                ANY_VALUE(pdg.thoigianbddk) AS thoigianbddk,
+                ANY_VALUE(pdg.thoigianbd) AS thoigianbd,
+                ANY_VALUE(pdg.thoigianktdk) AS thoigiankt,
+                ANY_VALUE(pdg.giatiencaonhat) AS giatiencaonhat,
+                ANY_VALUE(pdg.giakhoidiem) AS giakhoidiem,
+                ANY_VALUE(pdg.buocgia) AS buocgia,
+                ANY_VALUE(pdg.phithamgia) AS phithamgia,
+                ANY_VALUE(pdg.tiencoc) AS tiencoc,
+                ANY_VALUE(pdg.trangthaiduyet) AS trangthaiduyet,
+                
+                ANY_VALUE(sp.idsp) AS idsp,
+                ANY_VALUE(sp.tensp) AS tensp,
+                ANY_VALUE(sp.iddanhmuc) AS danhmuc,
+                ANY_VALUE(sp.trangthai) AS trangthai_sp,
+                ANY_VALUE(t.gmail) AS gmail_tk,
+                GROUP_CONCAT(h.tenhinhanh) AS ds_hinhanh
+            FROM phiendaugia pdg 
+            JOIN sanpham sp ON pdg.idsp = sp.idsp 
+            JOIN hinhanh h ON h.idsp = sp.idsp 
+            JOIN taikhoan t ON sp.idtk = t.idtk 
+            where pdg.idphiendg = ?
+            GROUP BY sp.idsp`;
         db.query(sqlPDG, [idphiendg], (err, result) => {
             if (err) {
                 return res.json({ message: 'Lỗi khi truy vấn dữ liệu', error: err });
